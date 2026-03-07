@@ -5,13 +5,17 @@ variable "rhel10_config" {
     cpu_count = number
     ram_mb    = number
     disk_path = string
+    format    = string
+    vm_count  = number
   })
 
   default = {
     name      = "rhel10_vm"
     cpu_count = 2
     ram_mb    = 2048
-    disk_path = "var/lib/libvirt/images/rhel1-.qcow2"
+    disk_path = "var/lib/libvirt/images/rhel10.qcow2"
+    format    = "qcow2"
+    vm_count  = 3
   }
 }
 
@@ -23,6 +27,8 @@ variable "rhel9_config" {
     cpu_count = number
     ram_mb    = number
     disk_path = string
+    format    = string
+    vm_count  = number
   })
 
   default = {
@@ -30,6 +36,8 @@ variable "rhel9_config" {
     cpu_count = 2
     ram_mb    = 2048
     disk_path = "/var/lib/libvirt/images/rhel9.qcow2" # name of VM in directory
+    format    = "qcow2"
+    vm_count  = 3
   }
 }
 
@@ -41,6 +49,8 @@ variable "alma9_config" {
     cpu_count = number
     ram_mb    = number
     disk_path = string
+    format    = string
+    vm_count  = number
   })
 
   default = {
@@ -48,5 +58,7 @@ variable "alma9_config" {
     cpu_count = 2
     ram_mb    = 2048
     disk_path = "/var/lib/libvirt/images/alma9.qcow2"
+    format    = "qcow2"
+    vm_count  = 3
   }
 }
