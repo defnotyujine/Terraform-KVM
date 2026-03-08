@@ -8,5 +8,6 @@ terraform {
 }
 
 provider "libvirt" {
-    uri = "qemu:///system"
+    # change based on KVM server credentials
+    uri = "qemu+ssh://vvolf@192.168.1.1/system"
 }
