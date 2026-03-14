@@ -36,6 +36,13 @@ resource "libvirt_domain" "rhel10" {
     network_name    = "default"
     wait_for_lease  = false
   }
+
+# For VNC graphical consoles
+  graphics {
+    type          = "vnc"
+    listen_type   = "address"
+    autoport      = true
+  }
 }
 
 # -----
