@@ -1,58 +1,9 @@
-# Storage Volumes
-resource "libvirt_volume" "rhel10_disk" {
-  count            = var.rhel10_config.vm_count
-  name             = "${var.rhel10_config.name}-${count.index}.qcow2"
-  pool             = "default"
-  base_volume_name = var.rhel10_config.base_volume_name
-  base_volume_pool = "default"
-  format           = var.rhel10_config.format
-}
-
-# VMs
-resource "libvirt_domain" "rhel10" {
-  count   = var.rhel10_config.vm_count
-  name    = "${var.rhel10_config.name}-${count.index}"
-  vcpu    = var.rhel10_config.cpu_count
-  memory  = var.rhel10_config.ram_mb
-  arch    = var.rhel10_config.arch
-  type    = var.rhel10_config.type
-  machine = var.rhel10_config.machine
-
-  cpu {
-    mode = var.rhel10_config.cpu_mode
-  }
-
-  disk {
-    volume_id = libvirt_volume.rhel10_disk[count.index].id
-  }
-
-  console {
-    type        = "pty"
-    target_port = "0"
-    target_type = "serial"
-  }
-
-  network_interface {
-    network_name    = "default"
-    wait_for_lease  = false
-  }
-
-# For VNC graphical consoles
-  graphics {
-    type          = "vnc"
-    listen_type   = "address"
-    autoport      = true
-  }
-}
-
-# -----
-
 resource "libvirt_volume" "rhel9_disk" {
   count            = var.rhel9_config.vm_count
   name             = "${var.rhel9_config.name}-${count.index}.qcow2"
-  pool             = "default"
+  pool             = var.rhel9_config.target_pool
   base_volume_name = var.rhel9_config.base_volume_name
-  base_volume_pool = "default"
+  base_volume_pool = var.rhel9_config.source_pool
   format           = var.rhel9_config.format
 }
 
@@ -65,9 +16,21 @@ resource "libvirt_domain" "rhel9" {
   arch    = var.rhel9_config.arch
   type    = var.rhel9_config.type
   machine = var.rhel9_config.machine
+  firmware = "/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd"
+
+  nvram {
+    file     = "/var/lib/libvirt/qemu/nvram/${var.rhel9_config.name}-${count.index}_VARS.fd"
+    template = "/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd"
+  }
 
   cpu {
     mode = var.rhel9_config.cpu_mode
+  }
+
+  graphics {
+    type        = "vnc"
+    listen_type = "address"
+    autoport    = true
   }
 
   disk {
@@ -84,45 +47,16 @@ resource "libvirt_domain" "rhel9" {
     network_name    = "default"
     wait_for_lease  = false
   }
-}
 
-# -----
-
-resource "libvirt_volume" "alma10_disk" {
-  count            = var.alma10_config.vm_count
-  name             = "${var.alma10_config.name}-${count.index}.qcow2"
-  pool             = "default"
-  base_volume_name = var.alma10_config.base_volume_name
-  base_volume_pool = "default"
-  format           = var.alma10_config.format
-}
-
-# VMs
-resource "libvirt_domain" "alma10" {
-  count   = var.alma10_config.vm_count
-  name    = "${var.alma10_config.name}-${count.index}"
-  vcpu    = var.alma10_config.cpu_count
-  memory  = var.alma10_config.ram_mb
-  arch    = var.alma10_config.arch
-  type    = var.alma10_config.type
-  machine = var.alma10_config.machine
-
-  cpu {
-    mode = var.alma10_config.cpu_mode
-  }
-
-  disk {
-    volume_id = libvirt_volume.alma10_disk[count.index].id
-  }
-
-  console {
-    type        = "pty"
-    target_port = "0"
-    target_type = "serial"
-  }
-
+  # BR-FDS bridge
   network_interface {
-    network_name    = "default"
-    wait_for_lease  = false
+    bridge         = "BR-FDS"
+    wait_for_lease = false
+  }
+
+  # Direct attach on eno1
+  network_interface {
+    macvtap        = "eno1"
+    wait_for_lease = false
   }
 }

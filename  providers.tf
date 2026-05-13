@@ -7,7 +7,11 @@ terraform {
     }
 }
 
+# provider "libvirt" {
+#     # change based on KVM server credentials
+#     uri = "qemu+ssh://frqadmin@192.168.8.211/system"
+# }
+
 provider "libvirt" {
-    # change based on KVM server credentials
-    uri = "qemu+ssh://vvolf@192.168.1.1/system"
+  uri = "qemu+ssh://frqadmin@192.168.8.211/system?keyfile=/home/frqadmin/.ssh/id_ed25519&no_verify=1"
 }
