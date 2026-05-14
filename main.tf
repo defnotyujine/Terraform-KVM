@@ -4,7 +4,7 @@ resource "libvirt_volume" "rhel9_disk" {
   pool             = var.rhel9_config.target_pool
   base_volume_name = var.rhel9_config.base_volume_name
   base_volume_pool = var.rhel9_config.source_pool
-  format           = var.rhel9_config.format
+  format           = "qcow2"
 }
 
 # VMs
@@ -13,8 +13,8 @@ resource "libvirt_domain" "rhel9" {
   name    = "${var.rhel9_config.name}-${count.index}"
   vcpu    = var.rhel9_config.cpu_count
   memory  = var.rhel9_config.ram_mb
-  arch    = var.rhel9_config.arch
-  type    = var.rhel9_config.type
+  arch    = "x86_64"
+  type    = "kvm"
   machine = var.rhel9_config.machine
   firmware = "/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd"
 
@@ -24,7 +24,7 @@ resource "libvirt_domain" "rhel9" {
   }
 
   cpu {
-    mode = var.rhel9_config.cpu_mode
+    mode = "host-passthrough"
   }
 
   graphics {
