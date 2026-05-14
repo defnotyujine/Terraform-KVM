@@ -1,3 +1,9 @@
+variable "vm_count" {
+  description = "Number of VMs to provision"
+  type        = number
+  default     = 2
+}
+
 variable "rhel9_config" {
   description = "Configuration settings for RHEL 9 virtual machine"
   type = object({
