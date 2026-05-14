@@ -1,5 +1,5 @@
 resource "libvirt_volume" "rhel9_disk" {
-  count            = var.rhel9_config.vm_count
+  count            = var.vm_count
   name             = "${var.rhel9_config.name}-${count.index}.qcow2"
   pool             = var.rhel9_config.target_pool
   base_volume_name = var.rhel9_config.base_volume_name
@@ -9,7 +9,7 @@ resource "libvirt_volume" "rhel9_disk" {
 
 # VMs
 resource "libvirt_domain" "rhel9" {
-  count   = var.rhel9_config.vm_count
+  count   = var.vm_count
   name    = "${var.rhel9_config.name}-${count.index}"
   vcpu    = var.rhel9_config.cpu_count
   memory  = var.rhel9_config.ram_mb
