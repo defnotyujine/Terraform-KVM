@@ -45,7 +45,7 @@ resource "libvirt_domain" "rhel9" {
 
   network_interface {
     network_name    = "default"
-    wait_for_lease  = false
+    wait_for_lease  = true
   }
 
   # BR-FDS bridge
