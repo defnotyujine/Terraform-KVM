@@ -13,5 +13,5 @@ terraform {
 # }
 
 provider "libvirt" {
-  uri = "qemu+ssh://frqadmin@192.168.8.211/system?keyfile=/home/frqadmin/.ssh/id_ed25519&no_verify=1"
+  uri = "qemu+ssh://frqadmin@192.168.122.1/system?keyfile=/home/frqadmin/.ssh/id_ed25519&no_verify=1"
 }
